@@ -24,3 +24,4 @@ setup(
         install_requires=[str(ir.req) for ir in requirements],
         install_requires=install_requires
 )
+
