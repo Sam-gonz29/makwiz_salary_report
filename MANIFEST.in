@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include makwiz_salary_report *.css
+recursive-include makwiz_salary_report *.csv
+recursive-include makwiz_salary_report *.html
+recursive-include makwiz_salary_report *.ico
+recursive-include makwiz_salary_report *.js
+recursive-include makwiz_salary_report *.json
+recursive-include makwiz_salary_report *.md
+recursive-include makwiz_salary_report *.png
+recursive-include makwiz_salary_report *.py
+recursive-include makwiz_salary_report *.svg
+recursive-include makwiz_salary_report *.txt
+recursive-exclude makwiz_salary_report *.pyc

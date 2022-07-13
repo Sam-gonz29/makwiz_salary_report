@@ -1,0 +1,33 @@
+{
+ "add_total_row": 1, 
+ "apply_user_permissions": 1, 
+ "creation": "2017-06-05 13:04:58.021582", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "modified": "2017-06-11 00:26:34.210257", 
+ "modified_by": "Administrator", 
+ "module": "Salary Report", 
+ "name": "CONTRIBUCION EMPLEADOR", 
+ "owner": "Administrator", 
+ "query": "SELECT\n `tabSalary Slip`.cedula_o_pasaporte AS `cedula`,\n `tabSalary Slip`.posting_date AS `FECHA:Date:80`,\n `tabSalary Slip`.employee_name AS `NOMBRE:Read Only:160`,\n `tabSalary Slip`.salario_base AS `BASE:Float:100`,\n`tabSalary Slip`.tasa_de_cambio AS `TASA:Read Only:100`,\n\n\t\n\tIF (`tabSalary Slip`.tasa_de_cambio != 0,`tabSalary Slip`.tasa_de_cambio * \n\tSUM(CASE WHEN \n\tsalary_component = 'US Retroactivo' OR\t\n\tsalary_component = 'US Ingresos Extraordinarios Cotizables Actual Quincena' OR\n\tsalary_component = 'US Otros Ingresos Extraordinarios Cotizables' OR\n\tsalary_component = 'US Otros Ingresos Extraordinarios No cotizables' OR\n\tsalary_component = 'US Ingresos Extraordinarios Cotizables Quincena Anterior' OR\n\tsalary_component = 'US Ingreso Extrordinarios Pagados Quincena Anterior' OR\n\tsalary_component = 'US Ingresos Extraordinarios No Cotizables' OR\n\tsalary_component = 'US Cesant\u00eda' OR\n\tsalary_component = 'US Vacaciones' OR\n\tsalary_component = 'US Pre-aviso' OR\n\tsalary_component = 'US Horas Extras Domingos y Feriados' OR\n\tsalary_component = 'US Horas Extras Nocturnas' OR\n\tsalary_component = 'US Horas Extras Diurnas' OR\n\tsalary_component = 'US Bonificacion' OR\n\tsalary_component = 'US Bonos por Desempe\u00f1o' OR\n\tsalary_component = 'US Comisiones' OR\n\tsalary_component = 'US Salario de Navidad'\n\tTHEN\n\t`tabSalary Detail`.amount\n\tELSE\n\t0\n\tEND\n\t),\n\tSUM(CASE WHEN \n\tsalary_component = 'Retroactivo' OR\t\n\tsalary_component = 'Ingresos Extraordinarios Cotizables Actual Quincena' OR\n\tsalary_component = 'Otros Ingresos Extraordinarios Cotizables' OR\n\tsalary_component = 'Otros Ingresos Extraordinarios No cotizables' OR\n\tsalary_component = 'Ingresos Extraordinarios Cotizables Quincena Anterior' OR\n\tsalary_component = 'Ingreso Extrordinarios Pagados Quincena Anterior' OR\n\tsalary_component = 'Ingresos Extraordinarios No Cotizables' OR\n\tsalary_component = 'Cesant\u00eda' OR\n\tsalary_component = 'Vacaciones' OR\n\tsalary_component = 'Pre-aviso' OR\n\tsalary_component = 'Horas Extras Domingos y Feriados' OR\n\tsalary_component = 'Horas Extras Nocturnas' OR\n\tsalary_component = 'Horas Extras Diurnas' OR\n\tsalary_component = 'Bonificacion' OR\n\tsalary_component = 'Bonos por Desempe\u00f1o' OR\n\tsalary_component = 'Comisiones' OR\n\tsalary_component = 'Salario de Navidad'\n\tTHEN\n\t`tabSalary Detail`.amount\n\tELSE\n\t0\n\tEND\n\t)\n\t) AS `Otros Ingresos:Float:100`,\n \nIF (`tabSalary Slip`.tasa_de_cambio != 0, `tabSalary Slip`.tasa_de_cambio * MAX(IF(salary_component = 'US SFS1 EMPLEADOR', `tabSalary Detail`.amount,\n    (IF(salary_component = 'US SFS2 EMPLEADOR', `tabSalary Detail`.amount,\"0\")))),MAX(IF(salary_component = 'SFS1 EMPLEADOR', `tabSalary Detail`.amount,\n    (IF(salary_component = 'SFS2 EMPLEADOR', `tabSalary Detail`.amount,\"0\"))))) AS \"SFS:Float:75\",\n\nIF (`tabSalary Slip`.tasa_de_cambio != 0, `tabSalary Slip`.tasa_de_cambio * MAX(IF(salary_component = 'US AFP1 EMPLEADOR', `tabSalary Detail`.amount,\n    (IF(salary_component = 'US AFP2 EMPLEADOR', `tabSalary Detail`.amount,\"0\")))),MAX(IF(salary_component = 'AFP1 EMPLEADOR', `tabSalary Detail`.amount,\n    (IF(salary_component = 'AFP2 EMPLEADOR', `tabSalary Detail`.amount,\"0\"))))) AS \"AFP:Float:75\",\n\nIF (`tabSalary Slip`.tasa_de_cambio != 0, `tabSalary Slip`.tasa_de_cambio * MAX(IF(salary_component = 'US INFOTEP', `tabSalary Detail`.amount, \"0\")),\nMAX(IF(salary_component = 'INFOTEP', `tabSalary Detail`.amount, \"0\"))) AS \"INFOTEP:Float:75\",\n\n\nIF (`tabSalary Slip`.tasa_de_cambio != 0, `tabSalary Slip`.tasa_de_cambio * MAX(IF (salary_component = 'US SEGURO DE RIESGO LABORAL',`tabSalary Detail`.amount,\n  (IF (salary_component = 'US SEGURO DE RIESGO LABORAL 2',`tabSalary Detail`.amount,\"0\")))),MAX(IF (salary_component = 'SEGURO DE RIESGO LABORAL',`tabSalary Detail`.amount,\n  (IF (salary_component = 'SEGURO DE RIESGO LABORAL 2',`tabSalary Detail`.amount,\"0\"))))) AS \"SRL:Float:75\"\n\nFROM\n  ((`tabSalary Slip`\nINNER JOIN `tabSalary Detail` ON `tabSalary Slip`.name = `tabSalary Detail`.parent)\nINNER JOIN tabEmployee ON `tabSalary Slip`.employee = tabEmployee.name)\nWHERE\n`tabSalary Detail`.parenttype = \"Salary Slip\" AND \n`tabSalary Detail`.parent = `tabSalary Slip`.`name` AND \n`tabSalary Detail`.parentfield = \"earnings\" AND\n`tabSalary Slip`.start_date between %(from_date)s and %(to_date)s AND\n`tabSalary Slip`.company = %(company)s\nGROUP BY\n `tabSalary Detail`.parent", 
+ "ref_doctype": "Salary Slip", 
+ "report_name": "CONTRIBUCION EMPLEADOR", 
+ "report_type": "Query Report", 
+ "roles": [
+  {
+   "role": "Asistente de Contabilidad"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "Employee"
+  }
+ ]
+}
